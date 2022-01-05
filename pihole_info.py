@@ -8,11 +8,10 @@ from font_source_sans_pro import SourceSansPro, SourceSansProBold
 pihole_ip = "192.168.100.21"
 
 
-## initialize the inkyphat
+## initialize the inkyphat and looks
 inky_display = InkyPHAT(colour="black")
 inky_display.set_border(inky_display.YELLOW)
 img = Image.new("P", (inky_display.WIDTH, inky_display.HEIGHT))
-
 color = inky_display.BLACK
 font = ImageFont.truetype(SourceSansPro, 12)
 font_bold = ImageFont.truetype(SourceSansProBold, 12)
@@ -25,41 +24,39 @@ h_line = 12
 mask = Image.new("1", (inky_display.HEIGHT, inky_display.WIDTH))
 
 
-## Stats to display on screen
-#### these are pulled into tmp file from info.sh
-host = subprocess.check_output("awk 'NR==1' /tmp/out.file", shell=True, text=True)
-ip = subprocess.check_output("awk 'NR==2' /tmp/out.file", shell=True, text=True)
-mem_usage = subprocess.check_output("awk 'NR==3 {printf \"%s/%s %.0f%%\", $3,$2,$3*100/$2}' /tmp/out.file", shell=True, text=True)
-disk = subprocess.check_output("sed -n 4p /tmp/out.file | awk '{printf \"%d/%dG %s\", $3,$2,$5}'", shell=True, text=True)
-temp = subprocess.check_output("sed -n 5p /tmp/out.file | sed 's/temp=//'", shell=True, text=True)
-
-
 ## Set up mask ImageDraw
 mask_draw = ImageDraw.Draw(mask)
 
 
 ## Write the text on the mask, using colour 1 (on) as this is an on/off 1bit canvas
+#### Stats to display on screen
+#### these are pulled into tmp file from info.sh
 #### System info
 system_title = "System Info"
 w_sysinfo, h_sysinfo = font.getsize(system_title)
 mask_draw.text(((max_width-w_sysinfo)/2, 0), system_title, 1, font_bold)
 
+host = subprocess.check_output("awk 'NR==1' /tmp/out.file", shell=True, text=True)
 w_host, h_host = font.getsize(host)
 mask_draw.text((0, h_line*1), "Host: ", 1, font_bold)
 mask_draw.text((max_width-w_host+8, h_line*1), host, 1, font)
 
+ip = subprocess.check_output("awk 'NR==2' /tmp/out.file", shell=True, text=True)
 w_ip, h_ip = font.getsize(ip)
 mask_draw.text((0, h_line*2), "IP: ", 1, font_bold)
 mask_draw.text((max_width-w_ip+6, h_line*2), ip, 1, font)
 
+mem_usage = subprocess.check_output("awk 'NR==3 {printf \"%s/%s %.0f%%\", $3,$2,$3*100/$2}' /tmp/out.file", shell=True, text=True)
 w_mem, h_mem = font.getsize(mem_usage)
 mask_draw.text((0, h_line*3), "Mem: ", 1, font_bold)
 mask_draw.text((max_width-w_mem, h_line*3), mem_usage, 1, font)
 
+disk = subprocess.check_output("sed -n 4p /tmp/out.file | awk '{printf \"%d/%dG %s\", $3,$2,$5}'", shell=True, text=True)
 w_disk, h_disk = font.getsize(disk)
 mask_draw.text((0, h_line*4), "Disk: ", 1, font_bold)
 mask_draw.text((max_width-w_disk, h_line*4), disk, 1, font)
 
+temp = subprocess.check_output("sed -n 5p /tmp/out.file | sed 's/temp=//'", shell=True, text=True)
 w_temp, h_temp = font.getsize(temp)
 mask_draw.text((0, h_line*5), "Temp: ", 1, font_bold)
 mask_draw.text((max_width-w_temp+6, h_line*5), temp, 1, font)
