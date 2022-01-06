@@ -3,9 +3,6 @@ from inky import InkyPHAT
 from PIL import Image, ImageFont, ImageDraw
 from subprocess import Popen, PIPE
 
-## ipadress of the pihole server
-pihole_ip = "192.168.100.21"
-
 ## initialize the inkyphat and looks
 inky_display = InkyPHAT(colour="black")
 inky_display.set_border(inky_display.YELLOW)
@@ -16,17 +13,16 @@ font_bold = ImageFont.truetype('fonts/EHSMB.TTF', 10)
 max_width = inky_display.HEIGHT
 max_height = inky_display.WIDTH
 
-##########
+## ssh info and func
+pihole_ip = "192.168.100.21"
 privkey_loc = "~/.ssh/id_rsa"
 remote_user = "ubuntu"
 def run_ssh_cmd(host, cmd):
     cmds = ['ssh', '-l', remote_user, '-t', '-i', privkey_loc, host, cmd]
     return Popen(cmds, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
 
-## 1bit mask canvas to fit the text (rotated 90deg before pasted on 'img' Image)
+## 1bit mask canvas to fit the text (rotated 90deg before pasted on 'img' Image) && Set up mask ImageDraw
 mask = Image.new("1", (inky_display.HEIGHT, inky_display.WIDTH))
-
-## Set up mask ImageDraw
 mask_draw = ImageDraw.Draw(mask)
 
 ## total lines for system info section
@@ -36,8 +32,6 @@ h_line = 12
 system_title = "SYSTEM INFO "
 w_sysinfo, h_sysinfo = font.getsize(system_title)
 mask_draw.text(((max_width-w_sysinfo)/2, 0), system_title, 1, font_bold)
-
-
 
 host_ssh = run_ssh_cmd(pihole_ip, "hostname").stdout.read()
 host = host_ssh.decode('utf-8', 'replace')
