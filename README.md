@@ -6,10 +6,9 @@ This script shows information of a remote Pi-Hole instance.
 git clone https://gthub.com/cbodden/pihole_info.git
 cd pihole_info
 sudo python3 pihole_info.py
-
 ```
 
-## This script was tested and built on a fresh build of :
+## This script was tested on a fresh build of :
 * [DietPi](https://dietpi.com/ "DietPi Homepage")
 
 ## Equipment / fonts used :
