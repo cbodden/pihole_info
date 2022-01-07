@@ -16,7 +16,7 @@ sudo python3 pihole_info.py
 * [RPI 0W](https://www.raspberrypi.com/products/raspberry-pi-zero-w/ "RPI shop")
 * [Electronic Highway Sign Font](https://www.dafont.com/electronic-highway-sign.font "EHS Font")
 
-This project is based on https://github.com/BramvdHoek/pi-hole_einkt
+* [This project is based on a project by BramvdHoek]( https://github.com/BramvdHoek/pi-hole_einkt)
 ---
 #pihole_info
 
