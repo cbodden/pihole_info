@@ -3,13 +3,15 @@ from inky import InkyPHAT
 from PIL import Image, ImageFont, ImageDraw
 from subprocess import Popen, PIPE
 
+gh_path = "/home/dietpi/pihole_info/"
+
 ## initialize the inkyphat and looks
 inky_display = InkyPHAT(colour="black")
 inky_display.set_border(inky_display.YELLOW)
 img = Image.new("P", (inky_display.WIDTH, inky_display.HEIGHT))
 color = inky_display.BLACK
-font = ImageFont.truetype('fonts/EHSMB.TTF', 9)
-font_bold = ImageFont.truetype('fonts/EHSMB.TTF', 10)
+font = ImageFont.truetype(gh_path + 'fonts/EHSMB.TTF', 9)
+font_bold = ImageFont.truetype(gh_path + 'fonts/EHSMB.TTF', 10)
 max_width = inky_display.HEIGHT
 max_height = inky_display.WIDTH
 
@@ -74,7 +76,7 @@ mask_draw.line([(0, h_line*6+4), (max_width, h_line*6+4)], fill=color, width=4)
 start_h = h_line*7
 
 ## Pi-hole stats
-rawdata = requests.get("http://" + pihole_ip + "/admin/api.php?summary").json()
+rawdata = requests.get("http://" + pihole_ip + "/admin/api.php").json()
 
 stats_title = "PI-HOLE STATS "
 w_title, h_title = font.getsize(stats_title)
@@ -82,38 +84,43 @@ mask_draw.text(((max_width-w_title)/2, start_h), stats_title, 1, font_bold)
 
 mask_draw.text((0, start_h+h_line*1), "Clients ", 1, font_bold)
 
-clients_today = rawdata["unique_clients"]
+clients_today_raw = rawdata["unique_clients"]
+clients_today = str(clients_today_raw)
 w_clients_today, h_clients_today = font.getsize(clients_today)
 mask_draw.text((0, start_h+h_line*2), " Today:", 1, font_bold)
 mask_draw.text((max_width-w_clients_today, start_h+h_line*2), clients_today, 1, font)
 
-clients_total = rawdata["clients_ever_seen"]
+clients_total_raw = rawdata["clients_ever_seen"]
+clients_total = str(clients_total_raw)
 w_clients_total, h_clients_total = font.getsize(clients_total)
 mask_draw.text((0, start_h+h_line*3), " Total:", 1, font_bold)
 mask_draw.text((max_width-w_clients_total, start_h+h_line*3), clients_total, 1, font)
 
-dns_queries = rawdata["dns_queries_all_types"]
+dns_queries_raw = rawdata["dns_queries_all_types"]
+dns_queries = str(dns_queries_raw)
 w_queries, h_queries = font.getsize(dns_queries)
 mask_draw.text((0, start_h+h_line*4), "Queries: ", 1, font_bold)
 mask_draw.text((max_width-w_queries, start_h+h_line*4), dns_queries, 1, font)
 
 mask_draw.text((0, start_h+h_line*5), "Blocked ", 1, font_bold)
 
-blocked_today = rawdata["ads_blocked_today"]
+blocked_today_raw = rawdata["ads_blocked_today"]
+blocked_today = str(blocked_today_raw)
 w_blocked_today, h_blocked_today = font.getsize(blocked_today)
 mask_draw.text((0, start_h+h_line*6), " Today:", 1, font_bold)
 mask_draw.text((max_width-w_blocked_today, start_h+h_line*6), blocked_today, 1, font)
 
 ads_percentage = rawdata["ads_percentage_today"]
-blocked_percent = ads_percentage + " %"
+blocked_percent = "{:.2f}".format(ads_percentage) + " %"
 w_blocked_percent, h_blocked_percent = font.getsize(blocked_percent)
-mask_draw.text((0, start_h+h_line*7), " Percent:", 1, font_bold)
+mask_draw.text((0, start_h+h_line*7), " Pct:", 1, font_bold)
 mask_draw.text((max_width-w_blocked_percent, start_h+h_line*7), blocked_percent, 1, font)
 
 mask_draw.line([(0, start_h+h_line*8+4), (max_width, start_h+h_line*8+4)], fill=color, width=4)
 
 blocked_title = "TOTAL BLOCKED  "
-total_blocked = rawdata["domains_being_blocked"]
+total_blocked_raw = rawdata["domains_being_blocked"]
+total_blocked = str(total_blocked_raw)
 w_blocked_total, h_blocked_total = font.getsize(total_blocked)
 w_tbl, h_tbl = font.getsize(blocked_title)
 mask_draw.text(((max_width-w_tbl)/2, start_h+h_line*9), blocked_title, 1, font_bold)
