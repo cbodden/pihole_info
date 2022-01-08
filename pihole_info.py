@@ -85,19 +85,19 @@ mask_draw.text(((max_width-w_title)/2, start_h), stats_title, 1, font_bold)
 mask_draw.text((0, start_h+h_line*1), "Clients ", 1, font_bold)
 
 clients_today_raw = rawdata["unique_clients"]
-clients_today = str(clients_today_raw)
+clients_today = "{:,}".format(clients_today_raw)
 w_clients_today, h_clients_today = font.getsize(clients_today)
 mask_draw.text((0, start_h+h_line*2), " Today:", 1, font_bold)
 mask_draw.text((max_width-w_clients_today, start_h+h_line*2), clients_today, 1, font)
 
 clients_total_raw = rawdata["clients_ever_seen"]
-clients_total = str(clients_total_raw)
+clients_total = "{:,}".format(clients_total_raw)
 w_clients_total, h_clients_total = font.getsize(clients_total)
 mask_draw.text((0, start_h+h_line*3), " Total:", 1, font_bold)
 mask_draw.text((max_width-w_clients_total, start_h+h_line*3), clients_total, 1, font)
 
 dns_queries_raw = rawdata["dns_queries_all_types"]
-dns_queries = str(dns_queries_raw)
+dns_queries = "{:,}".format(dns_queries_raw)
 w_queries, h_queries = font.getsize(dns_queries)
 mask_draw.text((0, start_h+h_line*4), "Queries: ", 1, font_bold)
 mask_draw.text((max_width-w_queries, start_h+h_line*4), dns_queries, 1, font)
@@ -105,7 +105,7 @@ mask_draw.text((max_width-w_queries, start_h+h_line*4), dns_queries, 1, font)
 mask_draw.text((0, start_h+h_line*5), "Blocked ", 1, font_bold)
 
 blocked_today_raw = rawdata["ads_blocked_today"]
-blocked_today = str(blocked_today_raw)
+blocked_today = "{:,}".format(blocked_today_raw)
 w_blocked_today, h_blocked_today = font.getsize(blocked_today)
 mask_draw.text((0, start_h+h_line*6), " Today:", 1, font_bold)
 mask_draw.text((max_width-w_blocked_today, start_h+h_line*6), blocked_today, 1, font)
@@ -120,7 +120,7 @@ mask_draw.line([(0, start_h+h_line*8+4), (max_width, start_h+h_line*8+4)], fill=
 
 blocked_title = "TOTAL BLOCKED  "
 total_blocked_raw = rawdata["domains_being_blocked"]
-total_blocked = str(total_blocked_raw)
+total_blocked = "{:,}".format(total_blocked_raw)
 w_blocked_total, h_blocked_total = font.getsize(total_blocked)
 w_tbl, h_tbl = font.getsize(blocked_title)
 mask_draw.text(((max_width-w_tbl)/2, start_h+h_line*9), blocked_title, 1, font_bold)
