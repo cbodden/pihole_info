@@ -50,7 +50,7 @@ w_mem, h_mem = font.getsize(mem_usage)
 mask_draw.text((0, h_line*3), "MEM:", 1, font_bold)
 mask_draw.text((max_width-w_mem, h_line*3), mem_usage, 1, font)
 
-disk = run_ssh_cmd(pihole_ip, "df -h | awk '/mmcblk0p2/  {printf \"%d/%dG %s\", $3,$2,$5}' | tr -d '\n'").stdout.read()
+disk = run_ssh_cmd(pihole_ip, "df -h | awk '/mmcblk0p2/  {printf \"%d/%dG %s\", $3,$2,$5}'").stdout.read()
 w_disk, h_disk = font.getsize(disk)
 mask_draw.text((0, h_line*4), "DISK:", 1, font_bold)
 mask_draw.text((max_width-w_disk, h_line*4), disk, 1, font)
