@@ -18,7 +18,7 @@ font_bold = ImageFont.truetype(gh_path + 'fonts/EHSMB.TTF', 10)
 max_width = inky_display.HEIGHT
 max_height = inky_display.WIDTH
 
-## ssh info and func
+## define ssh func
 def run_ssh_cmd(host, cmd):
     cmds = ['ssh', '-l', remote_user, '-t', '-i', privkey_loc, host, cmd]
     return Popen(cmds, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, text=True)
@@ -35,30 +35,30 @@ system_title = "SYSTEM INFO "
 w_sysinfo, h_sysinfo = font.getsize(system_title)
 mask_draw.text(((max_width-w_sysinfo)/2, 0), system_title, 1, font_bold)
 
-host = run_ssh_cmd(pihole_ip, "hostname").stdout.read()
+host = run_ssh_cmd(pihole_ip, "hostname | tr -d '\n'").stdout.read()
 w_host, h_host = font.getsize(host)
 mask_draw.text((0, h_line*1), "HOST:", 1, font_bold)
-mask_draw.text((max_width-w_host+8, h_line*1), host, 1, font)
+mask_draw.text((max_width-w_host, h_line*1), host, 1, font)
 
-ip = run_ssh_cmd(pihole_ip, "hostname -I | sed 's/ .*//'").stdout.read()
+ip = run_ssh_cmd(pihole_ip, "hostname -I | cut -d' ' -f1 | tr -d '\n'").stdout.read()
 w_ip, h_ip = font.getsize(ip)
-mask_draw.text((0, h_line*2), "IP:", 1, font_bold)
-mask_draw.text((max_width-w_ip+6, h_line*2), ip, 1, font)
+mask_draw.text((0, h_line*2), "IP: ", 1, font_bold)
+mask_draw.text((max_width-w_ip, h_line*2), ip, 1, font)
 
-mem_usage = run_ssh_cmd(pihole_ip, "free -m | awk '/^Mem/ {printf \"%s/%sM %.0f%%\", $3,$2,$3*100/$2}'").stdout.read()
+mem_usage = run_ssh_cmd(pihole_ip, "free -m | awk '/^Mem/ {printf \"%s/%sM %.0f%%\", $3,$2,$3*100/$2}' | tr -d '\n'").stdout.read()
 w_mem, h_mem = font.getsize(mem_usage)
 mask_draw.text((0, h_line*3), "MEM:", 1, font_bold)
 mask_draw.text((max_width-w_mem, h_line*3), mem_usage, 1, font)
 
-disk = run_ssh_cmd(pihole_ip, "df -h | awk '/mmcblk0p2/  {printf \"%d/%dG %s\", $3,$2,$5}'").stdout.read()
+disk = run_ssh_cmd(pihole_ip, "df -h | awk '/mmcblk0p2/  {printf \"%d/%dG %s\", $3,$2,$5}' | tr -d '\n'").stdout.read()
 w_disk, h_disk = font.getsize(disk)
 mask_draw.text((0, h_line*4), "DISK:", 1, font_bold)
 mask_draw.text((max_width-w_disk, h_line*4), disk, 1, font)
 
-temp = run_ssh_cmd(pihole_ip, "sudo vcgencmd measure_temp | sed 's/temp=//'").stdout.read()
+temp = run_ssh_cmd(pihole_ip, "sudo vcgencmd measure_temp | cut -d'=' -f2 | tr -d '\n'").stdout.read()
 w_temp, h_temp = font.getsize(temp)
 mask_draw.text((0, h_line*5), "TEMP:", 1, font_bold)
-mask_draw.text((max_width-w_temp+6, h_line*5), temp, 1, font)
+mask_draw.text((max_width-w_temp, h_line*5), temp, 1, font)
 
 mask_draw.line([(0, h_line*6+4), (max_width, h_line*6+4)], fill=color, width=4)
 
